@@ -1,0 +1,3 @@
+npm run tsc  > /dev/null 
+npm run lint  > /dev/null
+echo "🎉 All checks passed!" 
