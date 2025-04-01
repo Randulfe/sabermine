@@ -61,6 +61,7 @@ export const RegexItem = ({
 
   const handleSave = () => {
     if (error) return;
+    if (value.length === 0) return;
     onSave?.(value);
     if (!regex) setSavedValue(value);
     setIsEditing(false);
@@ -78,7 +79,7 @@ export const RegexItem = ({
   };
 
   return (
-    <div className="flex min-h-32 w-92 flex-row items-start gap-4">
+    <div className="flex h-full w-full flex-row items-center gap-4">
       {isEditing ? (
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-row items-center gap-2">
@@ -88,12 +89,12 @@ export const RegexItem = ({
               maxLength={MAX_LENGTH}
               onChange={handleChange}
               onKeyDown={handleEnterSave}
-              aria-invalid={Boolean(error)}
+              aria-invalid={Boolean(error) || value.length === 0}
             />
             <div className="flex flex-row gap-2">
               <Button
                 aria-label="Save"
-                disabled={Boolean(error)}
+                disabled={Boolean(error) || value.length === 0}
                 size="sm"
                 onClick={handleSave}
               >
