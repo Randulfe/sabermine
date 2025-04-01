@@ -4,13 +4,20 @@ interface RegexSelectionProps {
 
 export const RegexSelection = ({ matches }: RegexSelectionProps) => {
   return (
-    <div className="border-text flex flex-wrap gap-2 rounded-md border p-6">
-      {matches.length > 0 &&
-        matches.map((match, ix) => (
-          <span key={ix} className="bg-primary rounded-md px-2 py-1">
-            {match}
-          </span>
-        ))}
+    <div className="border-text h-full rounded-md border">
+      <div className="h-full overflow-y-auto">
+        <div className="flex min-w-0 flex-wrap gap-2 p-2">
+          {matches.length > 0 &&
+            matches.map((match, ix) => (
+              <span
+                key={ix}
+                className="bg-primary inline-block rounded-md px-2 py-1 break-all"
+              >
+                {match}
+              </span>
+            ))}
+        </div>
+      </div>
     </div>
   );
 };

@@ -19,6 +19,7 @@ export const Uncontrolled: Story = {
     onSave: () => undefined,
     onDismiss: () => undefined,
     isEdit: false,
+    text: "This is a test text",
   },
 };
 
@@ -31,5 +32,6 @@ export const Controlled: Story = {
   },
   args: {
     regex: "test.*regex",
+    text: "This is a test text",
   },
 };

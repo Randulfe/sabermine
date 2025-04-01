@@ -2,8 +2,11 @@ import { Check, Edit, Trash, X } from "lucide-react";
 import { Button } from "../Button/Button";
 import { useState } from "react";
 import { Input } from "../Input/Input";
+import { useMatches } from "@/app/hooks/useMatches";
+import { RegexSelection } from "../RegexSelection";
 
 interface RegexItemProps {
+  text?: string;
   regex?: string;
   isEdit?: boolean;
   onSave?: (regex: string) => void;
@@ -21,14 +24,15 @@ const hasCatastrophicBacktracking = (pattern: string): boolean => {
 };
 
 export const RegexItem = ({
+  text = "",
   regex,
   isEdit = false,
   onSave,
-  onDelete,
   onDismiss,
+  onDelete,
 }: RegexItemProps) => {
   const [value, setValue] = useState(regex ?? "");
-  const [savedValue, setSavedValue] = useState("");
+  const [savedValue, setSavedValue] = useState(regex ?? "");
   const [error, setError] = useState<string | null>(null);
   const [warning, setWarning] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(isEdit);
@@ -36,6 +40,7 @@ export const RegexItem = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setValue(newValue);
+    if (newValue === savedValue) return;
     if (newValue.length < MIN_LENGTH) {
       setError(`Regex cannot be empty`);
       return;
@@ -78,8 +83,17 @@ export const RegexItem = ({
     setIsEditing(false);
   };
 
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
+  const matches = useMatches({
+    regex: !error ? value : "",
+    text: !error ? text : "",
+  });
+
   return (
-    <div className="flex h-full w-full flex-row items-center gap-4">
+    <div className="flex h-full w-full flex-row items-center gap-2 sm:gap-4">
       {isEditing ? (
         <div className="flex w-full flex-col gap-2">
           <div className="flex flex-row items-center gap-2">
@@ -89,12 +103,16 @@ export const RegexItem = ({
               maxLength={MAX_LENGTH}
               onChange={handleChange}
               onKeyDown={handleEnterSave}
-              aria-invalid={Boolean(error) || value.length === 0}
+              aria-invalid={
+                Boolean(error) || value.length === 0 || value === savedValue
+              }
             />
             <div className="flex flex-row gap-2">
               <Button
                 aria-label="Save"
-                disabled={Boolean(error) || value.length === 0}
+                disabled={
+                  Boolean(error) || value.length === 0 || value === savedValue
+                }
                 size="sm"
                 onClick={handleSave}
               >
@@ -112,6 +130,9 @@ export const RegexItem = ({
           </div>
           {error && <p className="text-sm text-red-800">{error}</p>}
           {warning && <p className="text-sm text-yellow-800">{warning}</p>}
+          <div className="h-24 pt-2">
+            <RegexSelection matches={matches} />
+          </div>
         </div>
       ) : (
         <>
@@ -121,7 +142,7 @@ export const RegexItem = ({
               aria-label="Edit"
               variant="secondary"
               size="sm"
-              onClick={() => setIsEditing(true)}
+              onClick={handleEdit}
             >
               <Edit />
             </Button>
