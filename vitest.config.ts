@@ -18,9 +18,6 @@ export default defineConfig({
       "@/app": path.resolve(dirname, "app"),
     },
   },
-  optimizeDeps: {
-    exclude: ["react", "react-dom"],
-  },
   test: {
     workspace: [
       {
