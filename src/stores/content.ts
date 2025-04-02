@@ -1,6 +1,6 @@
+import { generateRandomString } from "@/app/utils/generateRandomString";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { loremIpsum } from "lorem-ipsum";
 
 interface ContentStore {
   text: string;
@@ -10,25 +10,14 @@ interface ContentStore {
   setLoaded: () => void;
 }
 
-const generateRandomText = (): string => {
-  return loremIpsum({
-    count: Math.floor(Math.random() * 3) + 1,
-    units: "paragraphs",
-    sentenceLowerBound: 3,
-    sentenceUpperBound: 7,
-    paragraphLowerBound: 2,
-    paragraphUpperBound: 4,
-  });
-};
-
 export const useContentStore = create<ContentStore>()(
   persist(
     (set) => ({
-      text: generateRandomText(),
+      text: generateRandomString(),
       isLoading: true,
       generateRandomText: () =>
         set(() => ({
-          text: generateRandomText(),
+          text: generateRandomString(),
         })),
       setText: (value: string) =>
         set(() => ({

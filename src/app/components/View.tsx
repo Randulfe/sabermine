@@ -1,5 +1,4 @@
 "use client";
-import { Button } from "@/components/Button";
 import { RegexSelection } from "@/components/RegexSelection";
 import {
   Select,
@@ -11,13 +10,17 @@ import {
 } from "@/components/Select";
 import { useContentStore } from "@/stores/content";
 import { useRegexStore } from "@/stores/regexStore";
-import { Check } from "lucide-react";
 import { useMemo } from "react";
 import { useMatches } from "../hooks/useMatches";
 
 export const View = () => {
-  const { regexes, selectedId, isLoading, setSelectedRegex, setRegex } =
-    useRegexStore();
+  const {
+    regexes,
+    selectedId,
+    isLoading,
+    setSelectedRegex,
+    setApprovedMatches,
+  } = useRegexStore();
   const { text } = useContentStore();
 
   const selectedRegex = useMemo(() => {
@@ -28,6 +31,14 @@ export const View = () => {
     regex: selectedRegex?.value || "",
     text,
   });
+
+  const handleApproval = (
+    approvedMatches: Set<string>,
+    disapprovedMatches: Set<string>,
+  ) => {
+    if (!selectedId) return;
+    setApprovedMatches({ id: selectedId, approvedMatches, disapprovedMatches });
+  };
 
   return (
     <div className="flex h-full w-full flex-col gap-6">
@@ -49,25 +60,13 @@ export const View = () => {
       ) : (
         <p>You should first create a regex to select your extractions</p>
       )}
-      {selectedRegex && (
-        <div className="flex h-92 flex-col gap-3">
-          <RegexSelection matches={matches} />
-          {selectedRegex.isApproved ? (
-            <div className="flex flex-row items-center gap-1 self-end">
-              <p className="text-emerald-800">Approved</p>
-              <Check className="text-emerald-800" />
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              className="self-end"
-              onClick={() =>
-                setRegex({ id: selectedRegex.id, isApproved: true })
-              }
-            >
-              Approve <Check />
-            </Button>
-          )}
+      {selectedRegex && !isLoading && (
+        <div className="flex flex-col gap-3">
+          <RegexSelection
+            matches={matches}
+            approvedMatches={selectedRegex.approvedMatches}
+            onSave={handleApproval}
+          />
         </div>
       )}
     </div>

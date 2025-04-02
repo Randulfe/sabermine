@@ -12,8 +12,17 @@ const meta: Meta<typeof RegexSelection> = {
 export default meta;
 type Story = StoryObj<typeof RegexSelection>;
 
-export const Basic: Story = {
+export const ViewMode: Story = {
   args: {
-    matches: ["test", "regex"],
+    matches: ["test", "regex", "test2", "regex2"],
   },
 };
+
+export const EditMode: Story = {
+  args: {
+    matches: ["test", "regex", "test2", "regex2"],
+    approvedMatches: new Set(["test"]),
+    onSave: () => undefined,
+  },
+};
+

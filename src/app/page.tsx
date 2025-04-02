@@ -12,7 +12,7 @@ export default function Home() {
   return (
     <div className="flex h-screen flex-row">
       <Sidebar>
-        <Tabs defaultValue="edit" className="flex h-full w-full flex-col">
+        <Tabs defaultValue="view" className="flex h-full w-full flex-col">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="edit">Edit</TabsTrigger>
             <TabsTrigger value="view">View</TabsTrigger>
